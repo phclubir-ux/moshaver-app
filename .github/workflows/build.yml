@@ -5,7 +5,7 @@ on:
       site_url:
         description: 'آدرس سایت بدون https'
         required: true
-        default: 'ADRES-SITE.ir/moshaver'
+        default: 'physicstory.ir/moshaver'
 
 jobs:
   build:
