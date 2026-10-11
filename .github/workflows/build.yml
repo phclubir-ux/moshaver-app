@@ -1,0 +1,30 @@
+name: ساخت اپ
+on:
+  workflow_dispatch:
+    inputs:
+      site_url:
+        description: 'physicstory.ir/moshaver'
+        required: true
+        default: 'physicstory.ir/moshaver'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: نصب ابزار
+        run: npm install -g @bubblewrap/cli
+
+      - name: ساخت پروژه
+        run: |
+          bubblewrap init --manifest="https://${{ github.event.inputs.site_url }}/index.php?manifest" --directory=app
+
+      - name: بستن APK
+        run: |
+          cd app
+          bubblewrap build --skipPwaValidation
+
+      - name: تحویل فایل
+        uses: actions/upload-artifact@v4
+        with:
+          name: moshaver-apk
+          path: app/app-release-signed.apk
