@@ -1,27 +1,30 @@
-name: ساخت اپ
+name: Build Android APK
 on:
   workflow_dispatch:
     inputs:
       site_url:
-        description: 'physicstory.ir/moshaver'
+        description: 'آدرس سایت بدون https'
         required: true
-        default: 'physicstory.ir/moshaver'
+        default: 'ADRES-SITE.ir/moshaver'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      BUBBLEWRAP_KEYSTORE_PASSWORD: MoshaApp1405
+      BUBBLEWRAP_KEY_PASSWORD: MoshaApp1405
+      BUBBLEWRAP_KEY_ALIAS: android
     steps:
       - name: نصب ابزار
         run: npm install -g @bubblewrap/cli
 
       - name: ساخت پروژه
         run: |
-          bubblewrap init --manifest="https://${{ github.event.inputs.site_url }}/index.php?manifest" --directory=app
+          printf 'n\nandroid.keystore\nandroid\nMoshaApp1405\nMoshaApp1405\n' | bubblewrap init --manifest="https://${{ github.event.inputs.site_url }}/index.php?manifest" --directory=app
 
       - name: بستن APK
-        run: |
-          cd app
-          bubblewrap build --skipPwaValidation
+        working-directory: app
+        run: bubblewrap build --skipPwaValidation
 
       - name: تحویل فایل
         uses: actions/upload-artifact@v4
